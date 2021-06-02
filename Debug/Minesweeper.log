@@ -1,0 +1,6 @@
+﻿  MapGeneration.cpp
+E:\C++ Projects\Minesweeper\src\MapGeneration.cpp(22,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Block.cpp
+  main.cpp
+  Generating Code...
+  Minesweeper.vcxproj -> E:\C++ Projects\Minesweeper\Debug\Minesweeper.exe

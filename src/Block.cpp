@@ -3,7 +3,10 @@
 
 Block::Block(BlockState state) : State(state) 
 {
-	ChangeSymbol(InteractState::Default);
+	if (state == BlockState::Safe)
+		ChangeSymbol(InteractState::Default);
+	else
+		ChangeSymbol(InteractState::Explode);
 }
 
 void Block::ChangeSymbol(InteractState interactionState)

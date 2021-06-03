@@ -10,13 +10,32 @@ Display::Display(int screenWidth, int screenHeight)
 
 void Display::AddWCharToArray(wchar_t c, int startingPos)
 {
+    if (startingPos > ScreenWidth * ScreenHeight)
+    {
+        const char* ErrorMessage = "Outside of bounds of Screen Array";
+        for (int j = 0; ErrorMessage[j] != '\0'; j++)
+        {
+            screen[j] = ErrorMessage[j];
+        }
+    }
     screen[startingPos] = c;
 }
 
 void Display::AddStringToArray(const char* str, int startingPos)
 {
     for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (startingPos > ScreenWidth * ScreenHeight)
+        {
+            const char* ErrorMessage = "Outside of bounds of Screen Array";
+            for (int j = 0; ErrorMessage[j] != '\0'; j++)
+            {
+                screen[j] = ErrorMessage[j];
+            }
+        }
         screen[startingPos++] = str[i];
+    }
+
 }
 
 void Display::PrintArrayToScreen() const

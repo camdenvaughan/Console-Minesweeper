@@ -29,24 +29,42 @@ int main()
     std::system("cls");
     // Display
     int ScreenWidth = 120;
-    int ScreenHeight = 40;
+    int ScreenHeight = 30;
     int currentPosX = 0;
     int currentPosY = 0;
     bool Key[4];
 
+    int PlaySpaceX = 20;
+    int PlaySpaceY = 20;
+
+    
+
     // Create Screen Buffer
     Display display(ScreenWidth, ScreenHeight);
 
-    //wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
-    //HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-    //SetConsoleActiveScreenBuffer(hConsole);
-    //DWORD dwBytesWritten = 0;
-    Map map(ScreenWidth * ScreenHeight, 100);
+    // Create Map
+    Map map(PlaySpaceX * PlaySpaceY, 15);
+
     while (1)
     {
         // Fill Screen Array with .
         for (int i = 0; i < ScreenWidth * ScreenHeight; i++)
-            display.AddWCharToArray(map.GetSymbolOnBlock(i), i);
+            display.AddWCharToArray(L' ', i);
+
+        // Fill Play Space with blocks
+        int i = 0; // block reference
+        for (int playX = 5; playX < PlaySpaceX; playX++)
+        {
+            for (int playY = 5; playY < PlaySpaceY; playY++)
+            {
+                display.AddWCharToArray(map.GetSymbolOnBlock(i++), (playY * ScreenWidth) + playX);
+            }
+        }
+               
+        // ** Find way to find which block is on a playspace **
+            // find y, to get the row, then add the x
+        // ** Find way to constrain player movement to playspace **
+
 
         // Place "Player" in Screen Array at current position
         display.AddWCharToArray(L'0', (currentPosY * ScreenWidth) + currentPosX);

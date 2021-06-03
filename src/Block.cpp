@@ -3,23 +3,7 @@
 
 Block::Block(BlockState state) : State(state) 
 {
-
-	if (State == BlockState::Bomb)
-		std::cout << "Q, ";
-	else if (State == BlockState::Safe)
-		std::cout << "#, ";
-	else
-		std::cout << "Error No State :/" << std::endl;
-}
-
-void Block::PrintSymbol() const
-{
-	if (State == BlockState::Bomb)
-		std::cout << "Q, ";
-	else if (State == BlockState::Safe)
-		std::cout << "#, ";
-	else
-		std::cout << "no state :/" << std::endl;
+	ChangeSymbol(InteractState::Default);
 }
 
 void Block::ChangeSymbol(InteractState interactionState)
@@ -27,26 +11,26 @@ void Block::ChangeSymbol(InteractState interactionState)
 	switch (interactionState)
 	{
 	case InteractState::Default:
-		ActiveSymbol = 'O';
+		ActiveSymbol = L'O';
 		break;
 	case InteractState::Hover:
-		ActiveSymbol = '0';
+		ActiveSymbol = L'0';
 		break;
 	case InteractState::Flag:
-		ActiveSymbol = 'P';
+		ActiveSymbol = L'P';
 		break;
 	case InteractState::ClickSafe:
-		ActiveSymbol = '.';
+		ActiveSymbol = L'.';
 		break;
 	case InteractState::Explode:
-		ActiveSymbol = 'B';
+		ActiveSymbol = L'B';
 		break;
 	default:
 		break;
 	}
 }
 
-char Block::GetActiveSymbol() const
+wchar_t Block::GetActiveSymbol() const
 {
 	return ActiveSymbol;
 }

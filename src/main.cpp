@@ -1,24 +1,29 @@
 #include <iostream>
-#include "MapGeneration.h"
 #include <Windows.h>
+#include <ctime>
+
+#include "Map.h"
+#include "Display.h"
 
 int main()
 {
+    srand(time(NULL));
+
     std::cout << "Welcome to MineSweeper\n";
     std::cout << "======================\n\n";
 
-    int MapSize, Bombs;
-    std::cout << "Enter Map Size\n";
-    std::cin >> MapSize;
-    std::cout << "Mape Size is : " << MapSize << std::endl;
-    std::cout << "Enter Bomb Count\n";
-    std::cin >> Bombs;
-    std::cout << "Bomb count is : " << Bombs << std::endl;
-    std::cout << "\nPress Enter to Generate Map\n";
-    std::cin.get();
+    //int MapSize, Bombs;
+    //std::cout << "Enter Map Size\n";
+    //std::cin >> MapSize;
+    //std::cout << "Mape Size is : " << MapSize << std::endl;
+    //std::cout << "Enter Bomb Count\n";
+    //std::cin >> Bombs;
+    //std::cout << "Bomb count is : " << Bombs << std::endl;
+    //std::cout << "\nPress Enter to Generate Map\n";
+    //std::cin.get();
 
-    //Generate Map
-    MapGeneration::GenerateMap(MapSize, Bombs);
+    ////Generate Map
+
     std::cin.get();
 
     std::system("cls");
@@ -30,22 +35,26 @@ int main()
     bool Key[4];
 
     // Create Screen Buffer
-    wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
-    HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-    SetConsoleActiveScreenBuffer(hConsole);
-    DWORD dwBytesWritten = 0;
+    Display display(ScreenWidth, ScreenHeight);
 
+    //wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
+    //HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+    //SetConsoleActiveScreenBuffer(hConsole);
+    //DWORD dwBytesWritten = 0;
+    Map map(ScreenWidth * ScreenHeight, 100);
     while (1)
     {
         // Fill Screen Array with .
-        for (int i = 0; i < ScreenWidth * ScreenHeight; i++) 
-            screen[i] = L'.';
+        for (int i = 0; i < ScreenWidth * ScreenHeight; i++)
+            display.AddWCharToArray(map.GetSymbolOnBlock(i), i);
 
         // Place "Player" in Screen Array at current position
-        screen[(currentPosY * ScreenWidth) + currentPosX] = L'0';
+        display.AddWCharToArray(L'0', (currentPosY * ScreenWidth) + currentPosX);
 
         // Print Sceen Array to screen
-        WriteConsoleOutputCharacter(hConsole, screen, ScreenWidth * ScreenHeight, { 0,0 }, &dwBytesWritten);
+        display.PrintArrayToScreen();
+
+        //WriteConsoleOutputCharacter(hConsole, screen, ScreenWidth * ScreenHeight, { 0,0 }, &dwBytesWritten);
         while (1)
         {
             // Input
@@ -79,6 +88,5 @@ int main()
             }
         }
     }
-    delete screen;
 }
 

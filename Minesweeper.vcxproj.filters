@@ -24,12 +24,18 @@
     <ClCompile Include="src\MapGeneration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Visualizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MapGeneration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Visualizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

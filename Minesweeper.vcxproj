@@ -142,10 +142,12 @@
     <ClCompile Include="src\MapGeneration.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Visualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MapGeneration.h" />
     <ClInclude Include="src\Block.h" />
+    <ClInclude Include="src\Visualizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

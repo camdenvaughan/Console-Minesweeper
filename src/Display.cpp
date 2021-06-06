@@ -1,50 +1,61 @@
 #include "Display.h"
 #include <Windows.h>
 
-Display::Display(int screenWidth, int screenHeight) 
-    : ScreenWidth(screenWidth), ScreenHeight(screenHeight), screen(new wchar_t[ScreenWidth * ScreenHeight])
+Display::Display(int ScreenWidth, int ScreenHeight)
+    : ScreenWidth(ScreenWidth), ScreenHeight(ScreenHeight), Screen(new wchar_t[ScreenWidth * ScreenHeight])
 {
-    hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-    SetConsoleActiveScreenBuffer(hConsole);
+    HConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+    SetConsoleActiveScreenBuffer(HConsole);
 }
 
-void Display::AddWCharToArray(wchar_t c, int startingPos)
+void Display::FillScreenWithChar(wchar_t C)
 {
-    if (startingPos > ScreenWidth * ScreenHeight)
+    for (int i = 0; i < ScreenWidth * ScreenHeight; i++)
+        Screen[i] = C;
+}
+
+void Display::AddWCharToArray(wchar_t c, int StartingPos)
+{
+    if (StartingPos > ScreenWidth * ScreenHeight)
     {
         const char* ErrorMessage = "Outside of bounds of Screen Array";
         for (int j = 0; ErrorMessage[j] != '\0'; j++)
         {
-            screen[j] = ErrorMessage[j];
+            Screen[j] = ErrorMessage[j];
         }
     }
-    screen[startingPos] = c;
+    Screen[StartingPos] = c;
 }
 
-void Display::AddStringToArray(const char* str, int startingPos)
+
+
+void Display::AddStringToArray(const char* Message, int StartingPos)
 {
-    for (int i = 0; str[i] != '\0'; i++)
+    for (int i = 0; Message[i] != '\0'; i++)
     {
-        if (startingPos > ScreenWidth * ScreenHeight)
+        if (StartingPos > ScreenWidth * ScreenHeight)
         {
             const char* ErrorMessage = "Outside of bounds of Screen Array";
             for (int j = 0; ErrorMessage[j] != '\0'; j++)
             {
-                screen[j] = ErrorMessage[j];
+                Screen[j] = ErrorMessage[j];
             }
         }
-        screen[startingPos++] = str[i];
+        Screen[StartingPos++] = Message[i];
     }
 
 }
 
-void Display::PrintArrayToScreen() const
+void Display::PrintArrayToScreen()
 {
     DWORD dwBytesWritten = 0;
-    WriteConsoleOutputCharacter(hConsole, screen, ScreenWidth * ScreenHeight, { 0,0 }, &dwBytesWritten);
+    WriteConsoleOutputCharacter(HConsole, Screen, ScreenWidth * ScreenHeight, { 0,0 }, &dwBytesWritten);
+    
+    //Clear Array
+    this->FillScreenWithChar(' ');
 }
 
 Display::~Display()
 {
-    delete[] screen;
+    delete[] Screen;
 }

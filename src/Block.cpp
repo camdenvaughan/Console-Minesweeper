@@ -8,6 +8,10 @@ Block::Block(BlockState state) : State(state)
 	else
 		ChangeSymbol(InteractState::Explode);
 }
+Block::Block()
+	:ActiveSymbol(' '), State(BlockState::Safe)
+{
+}
 
 void Block::ChangeSymbol(InteractState interactionState)
 {
@@ -15,9 +19,6 @@ void Block::ChangeSymbol(InteractState interactionState)
 	{
 	case InteractState::Default:
 		ActiveSymbol = L'O';
-		break;
-	case InteractState::Hover:
-		ActiveSymbol = L'0';
 		break;
 	case InteractState::Flag:
 		ActiveSymbol = L'P';

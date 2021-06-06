@@ -21,7 +21,7 @@
     <ClCompile Include="src\Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Map.cpp">
+    <ClCompile Include="src\Minefield.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Display.cpp">
@@ -38,7 +38,7 @@
     <ClInclude Include="src\Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Map.h">
+    <ClInclude Include="src\Minefield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

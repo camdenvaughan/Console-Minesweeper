@@ -11,7 +11,7 @@ private:
 	BlockState State;
 public:
 	Block(BlockState state);
-
+	Block();
 
 
 	void ChangeSymbol(InteractState interactionState);

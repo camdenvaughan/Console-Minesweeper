@@ -139,13 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Minefield.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Display.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\Minefield.h" />
     <ClInclude Include="src\MapGeneration.h" />
     <ClInclude Include="src\Block.h" />
     <ClInclude Include="src\Display.h" />

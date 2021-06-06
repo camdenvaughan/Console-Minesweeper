@@ -6,17 +6,18 @@ class Display
 {
 private:
 	int ScreenWidth, ScreenHeight;
-	wchar_t* screen;
+	wchar_t* Screen;
 
-	HANDLE hConsole;
+	HANDLE HConsole;
 
 public:
-	Display(int screenWidth, int screenHeight);
+	Display(int ScreenWidth, int ScreenHeight);
 	~Display();
+	void FillScreenWithChar(wchar_t C);
+	void AddWCharToArray(wchar_t C, int StartingPos);
+	void AddStringToArray(const char* Message, int StartingPos);
 
-	void AddWCharToArray(wchar_t c, int startingPos);
-	void AddStringToArray(const char* str, int startingPos);
+	void PrintArrayToScreen();
 
-	void PrintArrayToScreen() const;
 };
 

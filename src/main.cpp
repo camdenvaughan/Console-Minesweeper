@@ -1,78 +1,82 @@
 #include <iostream>
 #include <Windows.h>
 #include <ctime>
+#include <map>
 
-#include "Map.h"
+#include "Minefield.h"
 #include "Display.h"
+#include "Block.h"
 
 int main()
 {
+
     srand(time(NULL));
 
     std::cout << "Welcome to MineSweeper\n";
     std::cout << "======================\n\n";
 
-    //int MapSize, Bombs;
-    //std::cout << "Enter Map Size\n";
-    //std::cin >> MapSize;
-    //std::cout << "Mape Size is : " << MapSize << std::endl;
-    //std::cout << "Enter Bomb Count\n";
-    //std::cin >> Bombs;
-    //std::cout << "Bomb count is : " << Bombs << std::endl;
-    //std::cout << "\nPress Enter to Generate Map\n";
-    //std::cin.get();
-
-    ////Generate Map
-
+    std::cout << "\nPress Enter to Generate start\n";
+    // ***** ADD ***** dificulty choice
     std::cin.get();
-
     std::system("cls");
+
+
+
+    //*** Possibly extract to a Game loop file
+    
     // Display
     int ScreenWidth = 120;
     int ScreenHeight = 30;
-    int currentPosX = 0;
-    int currentPosY = 0;
+    int CurrentPosX = 0;
+    int CurrentPosY = 0;
     bool Key[4];
 
-    int PlaySpaceX = 20;
-    int PlaySpaceY = 20;
+    int OffsetTop = 5;
+    int OffsetLeft = 10;
 
-    
+    int PlaySpaceX = 40;
+    int PlaySpaceY = 10;
 
     // Create Screen Buffer
     Display display(ScreenWidth, ScreenHeight);
 
-    // Create Map
-    Map map(PlaySpaceX * PlaySpaceY, 15);
+    // Create Minefield
+    std::map<int, Block> BlockMap = Minefield::GenerateBlockMap(PlaySpaceX, PlaySpaceY, 15, OffsetLeft, OffsetTop, ScreenWidth);
+
+    // Fill Screen Array with .
+    display.FillScreenWithChar(' ');
 
     while (1)
     {
-        // Fill Screen Array with .
-        for (int i = 0; i < ScreenWidth * ScreenHeight; i++)
-            display.AddWCharToArray(L' ', i);
-
         // Fill Play Space with blocks
         int i = 0; // block reference
-        for (int playX = 5; playX < PlaySpaceX; playX++)
+        for (int playX = 0; playX < PlaySpaceX; playX++)
         {
-            for (int playY = 5; playY < PlaySpaceY; playY++)
+            for (int playY = 0; playY < PlaySpaceY; playY++)
             {
-                display.AddWCharToArray(map.GetSymbolOnBlock(i++), (playY * ScreenWidth) + playX);
+                int currentLoc = (playX + OffsetLeft) + (playY + OffsetTop) * ScreenWidth;
+                display.AddWCharToArray(BlockMap[currentLoc].GetActiveSymbol(), currentLoc);
             }
         }
-               
-        // ** Find way to find which block is on a playspace **
-            // find y, to get the row, then add the x
-        // ** Find way to constrain player movement to playspace **
+        // Convert Play Position to Play Space Position
+        // 
+        if (CurrentPosY > PlaySpaceY - 1)
+            CurrentPosY = PlaySpaceY - 1;
+        if (CurrentPosY < 0)
+            CurrentPosY = 0;
 
+        if (CurrentPosX > PlaySpaceX - 1)
+            CurrentPosX = PlaySpaceX -1;
+        if (CurrentPosX < 0)
+            CurrentPosX = 0;
+        int PlayerPlaySpacePosition = (CurrentPosY + OffsetTop) * ScreenWidth + CurrentPosX + OffsetLeft;
 
         // Place "Player" in Screen Array at current position
-        display.AddWCharToArray(L'0', (currentPosY * ScreenWidth) + currentPosX);
-
+        display.AddWCharToArray(L'0', PlayerPlaySpacePosition);
+        Sleep(100);
         // Print Sceen Array to screen
         display.PrintArrayToScreen();
 
-        //WriteConsoleOutputCharacter(hConsole, screen, ScreenWidth * ScreenHeight, { 0,0 }, &dwBytesWritten);
         while (1)
         {
             // Input
@@ -82,26 +86,26 @@ int main()
                 Key[k] = (0x8000 & GetAsyncKeyState((unsigned char)("\x27\x25\x26\x28"[k]))) != 0;
             if (Key[0])
             {
-                currentPosX++;
-                Sleep(100);
+                CurrentPosX++;
+                //Sleep(100);
                 break;
             }
             if (Key[1])
             {
-                currentPosX--;
-                Sleep(100);
+                CurrentPosX--;
+                //Sleep(100);
                 break;
             }
             if (Key[2])
             {
-                currentPosY--;
-                Sleep(100);
+                CurrentPosY--;
+                //Sleep(100);
                 break;
             }
             if (Key[3])
             {
-                currentPosY++;
-                Sleep(100);
+                CurrentPosY++;
+                //Sleep(100);
                 break;
             }
         }

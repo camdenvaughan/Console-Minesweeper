@@ -139,12 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Minesweeper.cpp" />
+    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Minefield.cpp" />
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Display.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Minesweeper.h" />
+    <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Minefield.h" />
     <ClInclude Include="src\MapGeneration.h" />
     <ClInclude Include="src\Block.h" />

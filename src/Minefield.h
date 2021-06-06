@@ -8,11 +8,20 @@
 class Minefield
 {
 private:
+	const int PlaySpaceX, PlaySpaceY;
+	const int PlayOffsetLeft, PlayOffsetTop, ScreenWidth;
+	const int BombCount;
+	std::vector<Block> Blocks;
+	std::map<int, Block> BlockMap;
 
-	static void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks);
+private:
+	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks);
+
+	std::map<int, Block> GenerateBlockMap();
+	void CheckSurroundingBlocks(int Location);
 
 public:
-
-	static std::map<int, Block> GenerateBlockMap(int PlaySpaceX, int PlaySpaceY, int BombCount, int PlayOffsetLeft, int PlayOffsetTop, int ScreenWidth);
+	Minefield(const int& PlaySpaceX, const int& PlaySpaceY, const int& PlayOffsetLeft, const int& PlayOffsetTop, const int& ScreenWidth, const int& BombCount);
+	Block GetBlockAtLocation(int Location);
 };
 

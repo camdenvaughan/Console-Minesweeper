@@ -14,6 +14,14 @@ void Display::FillScreenWithChar(wchar_t C)
         Screen[i] = C;
 }
 
+void Display::MoveCursor(int X, int Y)
+{
+    COORD CursorPoint;
+    CursorPoint.X = X;
+    CursorPoint.Y = Y;
+    SetConsoleCursorPosition(HConsole, CursorPoint);
+}
+
 void Display::AddWCharToArray(wchar_t c, int StartingPos)
 {
     if (StartingPos > ScreenWidth * ScreenHeight)

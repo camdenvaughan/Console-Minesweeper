@@ -33,22 +33,22 @@ void Playspace::AddWCharToArray(const wchar_t& C, const int& Position)
 
 }
 
-void Playspace::WritePlaySpaceToScreen(Display& Screen)
+void Playspace::WritePlaySpaceToScreen(Display* Screen)
 {
     int i = 0;
     for (int playY = 0; playY < PlaySpaceY; playY++)
     {
         for (int playX = 0; playX < PlaySpaceX; playX++)
         {
-            Screen.AddWCharToArray(PlaySpace[i++], PlaySpaceToScreenSpace(playX, playY));
+            Screen->AddWCharToArray(PlaySpace[i++], PlaySpaceToScreenSpace(playX, playY));
         }
     }
 }
 
-void Playspace::FillWithMinefield(Minefield& Mines)
+void Playspace::FillWithMinefield(Minefield* Mines)
 {
     for (int  i = 0; i < PlaySpaceX * PlaySpaceY; i++)
     {
-        PlaySpace[i] = Mines.GetBlockAtLocation(i).GetActiveSymbol();
+        PlaySpace[i] = Mines->GetBlockAtLocation(i).GetActiveSymbol();
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-
+class Minefield;
+class Display;
 class Playspace
 {
 private:
@@ -17,9 +18,9 @@ public:
 
 	int CoordsToPlaySpace(const int& X, const int& Y) const;
 
-	void WritePlaySpaceToScreen(class Display& Screen);
+	void WritePlaySpaceToScreen(Display* Screen);
 
-	void FillWithMinefield(class Minefield& mines);
+	void FillWithMinefield(Minefield* mines);
 
 	void AddWCharToArray(const wchar_t& C, const int& Position);
 };

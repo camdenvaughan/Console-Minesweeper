@@ -14,6 +14,7 @@ public:
 	Display(int ScreenWidth, int ScreenHeight);
 	~Display();
 	void FillScreenWithChar(wchar_t C);
+	void MoveCursor(int X, int Y);
 	void AddWCharToArray(wchar_t C, int StartingPos);
 	void AddStringToArray(const char* Message, int StartingPos);
 

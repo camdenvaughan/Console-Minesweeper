@@ -36,87 +36,90 @@ void Play()
 
     // Create Screen Buffer
     Display Screen(ScreenWidth, ScreenHeight);
+    Display* ScreenPtr = &Screen;
 
     // Create PlaySpace
-    Playspace PlayBox = Playspace(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
+    Playspace PlayBox(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
+    Playspace* PlayBoxPtr = &PlayBox;
 
     // Create Minefield
-    Minefield Mines = Minefield(PlayBox, 25);
+    Minefield Mines(PlayBoxPtr, 25);
+    Minefield* MinesPtr = &Mines;
 
 
     // Create Player
     Player Player1(PlaySpaceX, PlaySpaceY);
+    Player* PlayerPtr = &Player1;
 
     // Fill Screen Array with .
-    Screen.FillScreenWithChar(' ');
+    ScreenPtr->FillScreenWithChar(' ');
 
     while (GameIsPlaying)
     {
 
-        PlayBox.FillWithMinefield(Mines);
+        PlayBoxPtr->FillWithMinefield(MinesPtr);
 
         // Place "Player" in Screen Array at current position
-        Player1.ClampPlayerLocation();
-        PlayBox.AddWCharToArray(L'0', Player1.Location.X + Player1.Location.Y * PlaySpaceX);
+        PlayerPtr->ClampPlayerLocation();
+        ScreenPtr->MoveCursor(PlayerPtr->Location.X + PlayBoxPtr->OffsetLeft, PlayerPtr->Location.Y + PlayBoxPtr->OffsetTop);
 
         // Add PlayBox to Screen Array
-        PlayBox.WritePlaySpaceToScreen(Screen);
+        PlayBoxPtr->WritePlaySpaceToScreen(ScreenPtr);
 
 
         // Print Sceen Array to screen
-        Screen.PrintArrayToScreen();
+        ScreenPtr->PrintArrayToScreen();
 
         Sleep(300);
-        while (RecieveInput(Mines, Player1, PlayBox))
+        while (RecieveInput(MinesPtr, PlayerPtr, PlayBoxPtr))
         {
         }
     }
-
 }
 
-bool RecieveInput(Minefield& Mines, Player& Player1, Playspace& PlayBox)
+bool RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox)
 {
     if (GetAsyncKeyState(VK_RIGHT))
     {
-        Player1.Location.X++;
+        Player1->Location.X++;
         return false;
     }
     if (GetAsyncKeyState(VK_LEFT))
     {
-        Player1.Location.X--;
+        Player1->Location.X--;
         return false;
     }
     if (GetAsyncKeyState(VK_UP))
     {
-        Player1.Location.Y--;
+        Player1->Location.Y--;
         return false;
     }
     if (GetAsyncKeyState(VK_DOWN))
     {
-        Player1.Location.Y++;
+        Player1->Location.Y++;
         return false;
     }
     if (GetAsyncKeyState(VK_RETURN))
     {
-        if (Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged)
+        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
             return true;
         // Click
-        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Number);
+        Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Number);
         
         return false;
     }
     if (GetAsyncKeyState(0x46))
     {
-        if (Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged)
+        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
         {
-            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged = false;
-            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Default);
+            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = false;
+            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Default);
             return false;
         }
         else
         {
-            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged = true;
-            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Flag);
+            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = true;
+            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Flag);
             return false;
         }
     }

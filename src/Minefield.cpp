@@ -6,12 +6,12 @@
 #include <ctime>
 
 
-Minefield::Minefield(Playspace& PlayBox, const int& BombCount) 
+Minefield::Minefield(Playspace* PlayBox, const int& BombCount) 
 	: PlayBox(PlayBox), BombCount(BombCount)
 {
-	Blocks.reserve(PlayBox.PlaySpaceX * PlayBox.PlaySpaceY);
+	Blocks.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY);
 
-	GenerateMinefield(PlayBox.PlaySpaceX * PlayBox.PlaySpaceY, BombCount, Blocks);
+	GenerateMinefield(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY, BombCount, Blocks);
 }
 void Minefield::GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks)
 {

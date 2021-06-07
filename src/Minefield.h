@@ -17,8 +17,13 @@ private:
 
 public:
 	Minefield(Playspace* PlayBox, const int& BombCount);
-	void CheckSurroundingBlocks(int LocationX, int LocationY);
+
+	void ShowAllBombs();
+
+	void CheckSurroundingBlocks(int LocationX, int LocationY, struct GameData* GameState);
+
 	Block& GetBlockAtLocation(const int& Location);
+
 	Block GetBlockAtLocation(const int& Location)const;
 };
 

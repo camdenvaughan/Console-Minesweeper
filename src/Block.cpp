@@ -4,7 +4,7 @@
 Block::Block(BlockState state) 
 	: State(state) 
 {
-	ChangeSymbol(SymbolState::Default);
+		ChangeSymbol(SymbolState::Default);
 }
 
 void Block::ChangeSymbol(SymbolState interactionState)
@@ -12,10 +12,10 @@ void Block::ChangeSymbol(SymbolState interactionState)
 	switch (interactionState)
 	{
 	case SymbolState::Default:
-		ActiveSymbol = L'O';
+		ActiveSymbol = L'#';
 		break;
 	case SymbolState::Flag:
-		ActiveSymbol = L'2';
+		ActiveSymbol = L'P';
 		break;
 	case SymbolState::Number:
 		if (AdjacentBombs == 0)
@@ -25,8 +25,14 @@ void Block::ChangeSymbol(SymbolState interactionState)
 		}
 		ActiveSymbol = WCharNumberIndex[AdjacentBombs];
 		break;
-	case SymbolState::Explode:
-		ActiveSymbol = L'B';
+	case SymbolState::ExplodedBomb:
+		ActiveSymbol = L'X';
+		break;
+	case SymbolState::FlaggedBomb:
+		ActiveSymbol = L'Y';
+		break;
+	case SymbolState::UndetonatedBomb:
+		ActiveSymbol = L'x';
 		break;
 	default:
 		break;

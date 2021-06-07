@@ -139,6 +139,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameData.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Playspace.cpp" />
     <ClCompile Include="src\Minesweeper.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -148,6 +150,8 @@
     <ClCompile Include="src\Display.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameData.h" />
+    <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Playspace.h" />
     <ClInclude Include="src\Minesweeper.h" />
     <ClInclude Include="src\Player.h" />

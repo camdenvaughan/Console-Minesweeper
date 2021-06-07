@@ -4,11 +4,13 @@
 #include "Block.h"
 #include "Player.h"
 #include "Playspace.h"
+#include "Input.h"
+#include "GameData.h"
 
 #include <iostream>
 #include <ctime>
 
-#define F_KEY 0x46
+
 void Menu()
 {
     srand((unsigned int)time(NULL));
@@ -30,10 +32,10 @@ void Play()
     const int OffsetTop = 5;
     const int OffsetLeft = 10;
 
-    const int PlaySpaceX = 40;
-    const int PlaySpaceY = 10;
+    const int PlaySpaceX = 10;
+    const int PlaySpaceY = 5;
 
-    bool GameIsPlaying = true;
+    const int BombCount = 10;
 
     // Create Screen Buffer
     Display Screen(ScreenWidth, ScreenHeight);
@@ -44,9 +46,8 @@ void Play()
     Playspace* PlayBoxPtr = &PlayBox;
 
     // Create Minefield
-    Minefield Mines(PlayBoxPtr, 5);
+    Minefield Mines(PlayBoxPtr, BombCount);
     Minefield* MinesPtr = &Mines;
-
 
     // Create Player
     Player Player1(PlaySpaceX, PlaySpaceY);
@@ -55,7 +56,10 @@ void Play()
     // Fill Screen Array with .
     ScreenPtr->FillScreenWithChar(' ');
 
-    while (GameIsPlaying)
+    // Set up Game State
+    GameData GameState(PlayBoxPtr, BombCount);
+    GameData* GameStatePtr = &GameState;
+    while (GameStatePtr->IsGamePlaying())
     {
 
         PlayBoxPtr->FillWithMinefield(MinesPtr);
@@ -72,67 +76,14 @@ void Play()
         ScreenPtr->PrintArrayToScreen();
 
         Sleep(300);
-        while (RecieveInput(MinesPtr, PlayerPtr, PlayBoxPtr))
+        while (Input::RecieveInput(MinesPtr, PlayerPtr, PlayBoxPtr, GameStatePtr))
         {
         }
     }
-}
+    PlayBoxPtr->FillWithMinefield(MinesPtr);
+    PlayBoxPtr->WritePlaySpaceToScreen(ScreenPtr);
+    ScreenPtr->PrintArrayToScreen();
 
-bool RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox)
-{
-    if (GetAsyncKeyState(VK_RIGHT))
-    {
-        Player1->Location.X++;
-        return false;
-    }
-    if (GetAsyncKeyState(VK_LEFT))
-    {
-        Player1->Location.X--;
-        return false;
-    }
-    if (GetAsyncKeyState(VK_UP))
-    {
-        Player1->Location.Y--;
-        return false;
-    }
-    if (GetAsyncKeyState(VK_DOWN))
-    {
-        Player1->Location.Y++;
-        return false;
-    }
-    if (GetAsyncKeyState(VK_RETURN))
-    {
-        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
-            return true;
-        // Click
-        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Bomb)
-        {
-            // Lose Game
-            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Explode);
-            return false;
-        }
-
-        // Sets State to clicked, checks the amount of blocks, and clicks any surrounding empty blocks
-        Mines->CheckSurroundingBlocks(Player1->Location.X, Player1->Location.Y);
-        
-        return false;
-    }
-    if (GetAsyncKeyState(F_KEY)) // F Key
-    {
-        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Clicked)
-            return false;
-        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
-        {
-            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = false;
-            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Default);
-            return false;
-        }
-        else
-        {
-            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = true;
-            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Flag);
-            return false;
-        }
-    }
-    return true;
+    while (Input::WaitForEnter())
+    { }
 }

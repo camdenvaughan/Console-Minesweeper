@@ -14,10 +14,10 @@ private:
 private:
 	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<class Block>& Blocks);
 
-	void CheckSurroundingBlocks(int LocationX, int LocationY);
 
 public:
 	Minefield(Playspace* PlayBox, const int& BombCount);
+	void CheckSurroundingBlocks(int LocationX, int LocationY);
 	Block& GetBlockAtLocation(const int& Location);
 	Block GetBlockAtLocation(const int& Location)const;
 };

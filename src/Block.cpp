@@ -20,10 +20,10 @@ void Block::ChangeSymbol(SymbolState interactionState)
 	case SymbolState::Number:
 		if (AdjacentBombs == 0)
 		{
-			ActiveSymbol = L'2';
+			ActiveSymbol = L' ';
 			break;
 		}
-		ActiveSymbol = L'1';
+		ActiveSymbol = WCharNumberIndex[AdjacentBombs];
 		break;
 	case SymbolState::Explode:
 		ActiveSymbol = L'B';

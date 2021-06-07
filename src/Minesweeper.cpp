@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ctime>
 
+#define F_KEY 0x46
 void Menu()
 {
     srand((unsigned int)time(NULL));
@@ -43,7 +44,7 @@ void Play()
     Playspace* PlayBoxPtr = &PlayBox;
 
     // Create Minefield
-    Minefield Mines(PlayBoxPtr, 25);
+    Minefield Mines(PlayBoxPtr, 5);
     Minefield* MinesPtr = &Mines;
 
 
@@ -104,12 +105,22 @@ bool RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox)
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
             return true;
         // Click
-        Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Number);
+        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Bomb)
+        {
+            // Lose Game
+            Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::Explode);
+            return false;
+        }
+
+        // Sets State to clicked, checks the amount of blocks, and clicks any surrounding empty blocks
+        Mines->CheckSurroundingBlocks(Player1->Location.X, Player1->Location.Y);
         
         return false;
     }
-    if (GetAsyncKeyState(0x46))
+    if (GetAsyncKeyState(F_KEY)) // F Key
     {
+        if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Clicked)
+            return false;
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
         {
             Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = false;

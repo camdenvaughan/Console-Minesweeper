@@ -1,24 +1,24 @@
 #pragma once
 
-#include "Block.h"
 #include <vector>
+#include "Playspace.h"
 
 
-
+class Block;
 class Minefield
 {
 private:
-	const int PlaySpaceX, PlaySpaceY, PlayOffsetTop, PlayOffsetLeft, ScreenWidth;
+	Playspace PlayBox;
 	const int BombCount;
 	std::vector<Block> Blocks;
 
 private:
-	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks);
+	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<class Block>& Blocks);
 
 	void CheckSurroundingBlocks(int LocationX, int LocationY);
 
 public:
-	Minefield(const int& PlaySpaceX, const int& PlaySpaceY, const int& PlayOffsetLeft, const int& PlayOffsetTop, const int& ScreenWidth, const int& BombCount);
+	Minefield(Playspace& PlayBox, const int& BombCount);
 	Block& GetBlockAtLocation(const int& Location);
 	Block GetBlockAtLocation(const int& Location)const;
 };

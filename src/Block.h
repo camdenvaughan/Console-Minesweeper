@@ -8,12 +8,13 @@ class Block
 private:
 	wchar_t ActiveSymbol = 0;
 
-	int AdjacentBombs;
+	int AdjacentBombs = 3;
+
 
 public:
 
 	BlockState State;
-
+	bool IsFlagged = false;
 public:
 
 	Block(BlockState state);

@@ -10,7 +10,7 @@
 
 void Menu()
 {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     std::cout << "Welcome to MineSweeper\n";
     std::cout << "======================\n\n";
@@ -32,6 +32,8 @@ void Play()
     const int PlaySpaceX = 40;
     const int PlaySpaceY = 10;
 
+    bool GameIsPlaying = true;
+
     // Create Screen Buffer
     Display Screen(ScreenWidth, ScreenHeight);
 
@@ -39,7 +41,7 @@ void Play()
     Playspace PlayBox = Playspace(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
 
     // Create Minefield
-    Minefield Mines = Minefield(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth, 25);
+    Minefield Mines = Minefield(PlayBox, 25);
 
 
     // Create Player
@@ -48,7 +50,7 @@ void Play()
     // Fill Screen Array with .
     Screen.FillScreenWithChar(' ');
 
-    while (1)
+    while (GameIsPlaying)
     {
 
         PlayBox.FillWithMinefield(Mines);
@@ -60,12 +62,12 @@ void Play()
         // Add PlayBox to Screen Array
         PlayBox.WritePlaySpaceToScreen(Screen);
 
-        Sleep(100);
 
         // Print Sceen Array to screen
         Screen.PrintArrayToScreen();
 
-        while (!RecieveInput(Mines, Player1, PlayBox))
+        Sleep(300);
+        while (RecieveInput(Mines, Player1, PlayBox))
         {
         }
     }
@@ -77,34 +79,46 @@ bool RecieveInput(Minefield& Mines, Player& Player1, Playspace& PlayBox)
     if (GetAsyncKeyState(VK_RIGHT))
     {
         Player1.Location.X++;
-        return true;
+        return false;
     }
     if (GetAsyncKeyState(VK_LEFT))
     {
         Player1.Location.X--;
-        return true;
+        return false;
     }
     if (GetAsyncKeyState(VK_UP))
     {
         Player1.Location.Y--;
-        return true;
+        return false;
     }
     if (GetAsyncKeyState(VK_DOWN))
     {
         Player1.Location.Y++;
-        return true;
+        return false;
     }
     if (GetAsyncKeyState(VK_RETURN))
     {
-        // Not Happening for some reason
-        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Explode);
+        if (Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged)
+            return true;
+        // Click
+        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Number);
         
-        return true;
+        return false;
     }
     if (GetAsyncKeyState(0x46))
     {
-        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Flag);
-        return true;
+        if (Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged)
+        {
+            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged = false;
+            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Default);
+            return false;
+        }
+        else
+        {
+            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).IsFlagged = true;
+            Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Flag);
+            return false;
+        }
     }
-    return false;
+    return true;
 }

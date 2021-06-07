@@ -19,3 +19,4 @@ public:
 
 	Player(int PlaySpaceX, int PlaySpaceY);
 	void ClampPlayerLocation();
+};

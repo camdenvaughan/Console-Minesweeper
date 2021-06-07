@@ -15,10 +15,15 @@ void Block::ChangeSymbol(SymbolState interactionState)
 		ActiveSymbol = L'O';
 		break;
 	case SymbolState::Flag:
-		ActiveSymbol = L'P';
+		ActiveSymbol = L'2';
 		break;
 	case SymbolState::Number:
-		ActiveSymbol = (wchar_t)AdjacentBombs;
+		if (AdjacentBombs == 0)
+		{
+			ActiveSymbol = L'2';
+			break;
+		}
+		ActiveSymbol = L'1';
 		break;
 	case SymbolState::Explode:
 		ActiveSymbol = L'B';

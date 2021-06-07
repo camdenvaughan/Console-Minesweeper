@@ -1,9 +1,17 @@
 #include "Playspace.h"
+#include "Display.h"
+#include "Minefield.h"
+#include "Block.h"
+
 Playspace::Playspace(const int& PlaySpaceX, const int& PlaySpaceY, const int& OffsetLeft, const int& OffsetTop, const int& ScreenWidth)
 	: PlaySpaceX(PlaySpaceX), PlaySpaceY(PlaySpaceY), OffsetLeft(OffsetLeft), OffsetTop(OffsetTop), ScreenWidth(ScreenWidth), PlaySpace(new wchar_t[PlaySpaceX * PlaySpaceY])
 {
 
 }
+
+Playspace::Playspace() 
+    : PlaySpaceX(10), PlaySpaceY(10), OffsetLeft(5), OffsetTop(5), ScreenWidth(50), PlaySpace(new wchar_t[PlaySpaceX * PlaySpaceY])
+{}
 
 Playspace::~Playspace()
 {

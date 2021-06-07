@@ -2,26 +2,24 @@
 
 #include "Block.h"
 #include <vector>
-#include <map>
+
 
 
 class Minefield
 {
 private:
-	const int PlaySpaceX, PlaySpaceY;
-	const int PlayOffsetLeft, PlayOffsetTop, ScreenWidth;
+	const int PlaySpaceX, PlaySpaceY, PlayOffsetTop, PlayOffsetLeft, ScreenWidth;
 	const int BombCount;
 	std::vector<Block> Blocks;
-	std::map<int, Block> BlockMap;
 
 private:
 	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks);
 
-	std::map<int, Block> GenerateBlockMap();
-	void CheckSurroundingBlocks(int Location);
+	void CheckSurroundingBlocks(int LocationX, int LocationY);
 
 public:
 	Minefield(const int& PlaySpaceX, const int& PlaySpaceY, const int& PlayOffsetLeft, const int& PlayOffsetTop, const int& ScreenWidth, const int& BombCount);
-	Block GetBlockAtLocation(int Location);
+	Block& GetBlockAtLocation(const int& Location);
+	Block GetBlockAtLocation(const int& Location)const;
 };
 

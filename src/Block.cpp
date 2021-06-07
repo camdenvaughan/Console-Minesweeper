@@ -1,32 +1,26 @@
 #include "Block.h"
 #include <iostream>
 
-Block::Block(BlockState state) : State(state) 
+Block::Block(BlockState state) 
+	: State(state) 
 {
-	if (state == BlockState::Safe)
-		ChangeSymbol(InteractState::Default);
-	else
-		ChangeSymbol(InteractState::Explode);
-}
-Block::Block()
-	:ActiveSymbol(' '), State(BlockState::Safe)
-{
+	ChangeSymbol(SymbolState::Default);
 }
 
-void Block::ChangeSymbol(InteractState interactionState)
+void Block::ChangeSymbol(SymbolState interactionState)
 {
 	switch (interactionState)
 	{
-	case InteractState::Default:
+	case SymbolState::Default:
 		ActiveSymbol = L'O';
 		break;
-	case InteractState::Flag:
+	case SymbolState::Flag:
 		ActiveSymbol = L'P';
 		break;
-	case InteractState::ClickSafe:
-		ActiveSymbol = L'.';
+	case SymbolState::Number:
+		ActiveSymbol = (wchar_t)AdjacentBombs;
 		break;
-	case InteractState::Explode:
+	case SymbolState::Explode:
 		ActiveSymbol = L'B';
 		break;
 	default:
@@ -34,7 +28,17 @@ void Block::ChangeSymbol(InteractState interactionState)
 	}
 }
 
+void Block::AddAdjacentBomb()
+{
+	AdjacentBombs++;
+}
+
 wchar_t Block::GetActiveSymbol() const
 {
 	return ActiveSymbol;
+}
+
+int Block::GetAdjacentBombs() const
+{
+	return AdjacentBombs;
 }

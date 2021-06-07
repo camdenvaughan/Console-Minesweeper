@@ -3,16 +3,10 @@
 #include "Display.h"
 #include "Block.h"
 #include "Player.h"
+#include "Playspace.h"
 
 #include <iostream>
-#include <conio.h>
 #include <ctime>
-#include <map>
-
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
 
 void Menu()
 {
@@ -29,80 +23,87 @@ void Menu()
 
 void Play()
 {
-    int ScreenWidth = 120;
-    int ScreenHeight = 30;
+    const int ScreenWidth = 120;
+    const int ScreenHeight = 30;
 
-    int OffsetTop = 5;
-    int OffsetLeft = 10;
+    const int OffsetTop = 5;
+    const int OffsetLeft = 10;
 
-    int PlaySpaceX = 40;
-    int PlaySpaceY = 10;
+    const int PlaySpaceX = 40;
+    const int PlaySpaceY = 10;
 
     // Create Screen Buffer
-    Display display(ScreenWidth, ScreenHeight);
+    Display Screen(ScreenWidth, ScreenHeight);
+
+    // Create PlaySpace
+    Playspace PlayBox = Playspace(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
 
     // Create Minefield
-    Minefield* Mines = new Minefield(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth, 25);
+    Minefield Mines = Minefield(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth, 25);
+
 
     // Create Player
     Player Player1(PlaySpaceX, PlaySpaceY);
 
     // Fill Screen Array with .
-    display.FillScreenWithChar(' ');
+    Screen.FillScreenWithChar(' ');
 
     while (1)
     {
-        // Fill Play Space with blocks
-        int i = 0; // block reference
-        for (int playX = 0; playX < PlaySpaceX; playX++)
-        {
-            for (int playY = 0; playY < PlaySpaceY; playY++)
-            {
-                int currentLoc = (playX + OffsetLeft) + (playY + OffsetTop) * ScreenWidth;
-                display.AddWCharToArray(Mines->GetBlockAtLocation(currentLoc).GetActiveSymbol(), currentLoc);
-            }
-        }
 
-        // Convert Play Position to Play Space Position
-        int PlayerPlaySpacePosition = (Player1.Location.Y + OffsetTop) * ScreenWidth + Player1.Location.X + OffsetLeft;
+        PlayBox.FillWithMinefield(Mines);
 
         // Place "Player" in Screen Array at current position
-        display.AddWCharToArray(L'0', PlayerPlaySpacePosition);
+        Player1.ClampPlayerLocation();
+        PlayBox.AddWCharToArray(L'0', Player1.Location.X + Player1.Location.Y * PlaySpaceX);
+
+        // Add PlayBox to Screen Array
+        PlayBox.WritePlaySpaceToScreen(Screen);
 
         Sleep(100);
 
         // Print Sceen Array to screen
-        display.PrintArrayToScreen();
+        Screen.PrintArrayToScreen();
 
-        while (!RecieveInput(Mines, Player1, PlayerPlaySpacePosition))
+        while (!RecieveInput(Mines, Player1, PlayBox))
         {
         }
     }
+
 }
 
-bool RecieveInput(Minefield* Mines, Player& Player1, int CurrentPos)
+bool RecieveInput(Minefield& Mines, Player& Player1, Playspace& PlayBox)
 {
-    bool Key[4];
-    for (int k = 0; k < 4; k++)
-        Key[k] = (0x8000 & GetAsyncKeyState((unsigned char)("\x27\x25\x26\x28"[k]))) != 0;
-    if (Key[0])
+    if (GetAsyncKeyState(VK_RIGHT))
     {
         Player1.Location.X++;
         return true;
     }
-    if (Key[1])
+    if (GetAsyncKeyState(VK_LEFT))
     {
         Player1.Location.X--;
         return true;
     }
-    if (Key[2])
+    if (GetAsyncKeyState(VK_UP))
     {
         Player1.Location.Y--;
         return true;
     }
-    if (Key[3])
+    if (GetAsyncKeyState(VK_DOWN))
     {
         Player1.Location.Y++;
+        return true;
+    }
+    if (GetAsyncKeyState(VK_RETURN))
+    {
+        // Not Happening for some reason
+        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Explode);
+        
+        return true;
+    }
+    if (GetAsyncKeyState(0x46))
+    {
+        Mines.GetBlockAtLocation(PlayBox.CoordsToPlaySpace(Player1.Location.X, Player1.Location.Y)).ChangeSymbol(SymbolState::Flag);
         return true;
     }
     return false;

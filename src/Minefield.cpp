@@ -10,22 +10,6 @@ Minefield::Minefield(const int& PlaySpaceX, const int& PlaySpaceY, const int& Pl
 	Blocks.reserve(PlaySpaceX * PlaySpaceY);
 
 	GenerateMinefield(PlaySpaceX * PlaySpaceY, BombCount, Blocks);
-
-}
-
-std::map<int, Block> Minefield::GenerateBlockMap()
-{
-
-	// Create Coordinate Keys for each block
-	int i = 0; // block reference
-	for (int playX = 0; playX < PlaySpaceX; playX++)
-	{
-		for (int playY = 0; playY < PlaySpaceY; playY++)
-		{
-			BlockMap[(playX + PlayOffsetLeft) + (playY + PlayOffsetTop) * ScreenWidth] = Blocks[i++];
-		}
-	}
-	return BlockMap;
 }
 
 void Minefield::GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks)
@@ -38,16 +22,44 @@ void Minefield::GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Bl
 	std::random_shuffle(Blocks.begin(), Blocks.end());
 }
 
-void Minefield::CheckSurroundingBlocks(int Location)
+void Minefield::CheckSurroundingBlocks(int LocationX, int LocationY)
 {
-	//check 8 surrounding blocks
-	//make sure they arent already visible
+	//Blocks[LocationX * LocationY].State = BlockState::Clicked;
 
-	//show the ones that arent bombs
-	//get the ones at 0 to check
+	//// Loop through 8 surrounding Blocks
+	//for (int X = LocationX - 1; X < LocationX + 2; X++)
+	//{
+	//	for (int Y = LocationY - 1; Y < LocationY + 2; Y++)
+	//	{
+	//		// If the block has already been clicked (safe) or is outside the bounds of the play space, continue
+	//		if (Blocks[X * Y].State == BlockState::Clicked || X < 0 || Y < 0 || X > PlaySpaceX || Y > PlaySpaceX)
+	//			continue;
+	//		// If the block is a bomb, increment the Adjacent BombCount
+	//		if (Blocks[X * Y].State == BlockState::Bomb)
+	//			Blocks[LocationX * LocationY].AddAdjacentBomb();
+	//	}
+	//}
+	//// If the block contained no adjacent bombs, click and check the 8 surrounding blocks
+	//if (Blocks[PlaySpaceToScreenConversion(LocationX, LocationY)].GetAdjacentBombs() == 0)
+	//	for (int X = LocationX - 1; X < LocationX + 2; X++)
+	//	{
+	//		for (int Y = LocationY - 1; Y < LocationY + 2; Y++)
+	//		{
+	//			if (Blocks[X * Y].State == BlockState::Clicked || X < 0 || Y < 0 || X > PlaySpaceX || Y > PlaySpaceX)
+	//				continue;
+	//			CheckSurroundingBlocks(X, Y);
+	//		}
+	//	}
+	//// Set the active symbol to show adjacent bombs
+	//Blocks[PlaySpaceToScreenConversion(LocationX, LocationY)].ChangeSymbol(SymbolState::Number);
 }
 
-Block Minefield::GetBlockAtLocation(int Location)
+Block& Minefield::GetBlockAtLocation(const int& Location)
 {
-	return BlockMap[Location];
+	return Blocks[Location];
+}
+
+Block Minefield::GetBlockAtLocation(const int& Location) const
+{
+	return Blocks[Location];
 }

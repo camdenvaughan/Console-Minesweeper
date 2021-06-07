@@ -1,21 +1,29 @@
 #pragma once
-enum class BlockState { Bomb, Safe };
-enum class InteractState {Default, Hover, Flag, ClickSafe, Explode};
+
+enum class BlockState { Bomb, Safe, Clicked };
+enum class SymbolState {Default, Flag, Number, Explode};
 
 class Block
 {
 private:
 	wchar_t ActiveSymbol = 0;
 
+	int AdjacentBombs;
+
+public:
 
 	BlockState State;
+
 public:
+
 	Block(BlockState state);
-	Block();
 
+	void ChangeSymbol(SymbolState interactionState);
 
-	void ChangeSymbol(InteractState interactionState);
+	void AddAdjacentBomb();
 
 	wchar_t GetActiveSymbol() const;
+
+	int GetAdjacentBombs() const;
 };
 

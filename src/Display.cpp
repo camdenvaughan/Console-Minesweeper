@@ -24,14 +24,6 @@ void Display::MoveCursor(int X, int Y)
 
 void Display::AddWCharToArray(wchar_t c, int StartingPos)
 {
-    if (StartingPos > ScreenWidth * ScreenHeight)
-    {
-        const char* ErrorMessage = "Outside of bounds of Screen Array";
-        for (int j = 0; ErrorMessage[j] != '\0'; j++)
-        {
-            Screen[j] = ErrorMessage[j];
-        }
-    }
     Screen[StartingPos] = c;
 }
 
@@ -41,14 +33,6 @@ void Display::AddStringToArray(const char* Message, int StartingPos)
 {
     for (int i = 0; Message[i] != '\0'; i++)
     {
-        if (StartingPos > ScreenWidth * ScreenHeight)
-        {
-            const char* ErrorMessage = "Outside of bounds of Screen Array";
-            for (int j = 0; ErrorMessage[j] != '\0'; j++)
-            {
-                Screen[j] = ErrorMessage[j];
-            }
-        }
         Screen[StartingPos++] = Message[i];
     }
 

@@ -10,17 +10,18 @@ private:
 	Playspace* PlayBox;
 	const int BombCount;
 	std::vector<Block> Blocks;
+	std::vector<int> SafeBlockCoords;
 
 private:
-	void GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<class Block>& Blocks);
-
 
 public:
 	Minefield(Playspace* PlayBox, const int& BombCount);
 
+	void GenerateMinefield();
+
 	void ShowAllBombs();
 
-	void CheckSurroundingBlocks(int LocationX, int LocationY, struct GameData* GameState);
+	void CheckSurroundingBlocks(const int& LocationX, const int& LocationY, struct GameData* GameState);
 
 	Block& GetBlockAtLocation(const int& Location);
 

@@ -4,8 +4,10 @@
 
 class Display
 {
-private:
+public:
 	int ScreenWidth, ScreenHeight;
+
+private:
 	wchar_t* Screen;
 
 	HANDLE HConsole;

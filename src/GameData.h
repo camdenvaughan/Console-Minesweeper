@@ -5,11 +5,12 @@ struct GameData
 private:
 	const int TotalSafeSquares;
 public:
+	bool IsFirstClick = true;
 
 	bool GameIsOver = false;
 
 	int SafeSquaresClicked = 0;
 
 	GameData(class Playspace* PlayBox, const int& BombCount);
-	bool IsGamePlaying();
+	bool IsGamePlaying(class Display* Screen);
 };

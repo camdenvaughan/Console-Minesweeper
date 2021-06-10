@@ -4,6 +4,9 @@
 Block::Block(BlockState state) 
 	: State(state) 
 {
+	if (State == BlockState::Bomb)
+		ChangeSymbol(SymbolState::Default);
+	else
 		ChangeSymbol(SymbolState::Default);
 }
 
@@ -12,10 +15,10 @@ void Block::ChangeSymbol(SymbolState interactionState)
 	switch (interactionState)
 	{
 	case SymbolState::Default:
-		ActiveSymbol = L'#';
+		ActiveSymbol = L'\uFFFD'; // Unicode for Question Mark Box
 		break;
 	case SymbolState::Flag:
-		ActiveSymbol = L'P';
+		ActiveSymbol = L'F';
 		break;
 	case SymbolState::Number:
 		if (AdjacentBombs == 0)

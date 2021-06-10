@@ -1,7 +1,7 @@
 #pragma once
 
-void Menu();
+void ShowMenu(bool IsPlaying);
 
-void Play();
+void Play(class Display* ScreenPtr, class Playspace* PlayBoxPtr, class Minefield* MinesPtr, class Player* PlayerPtr, struct GameData* GameStatePtr);
 
 

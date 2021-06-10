@@ -36,6 +36,24 @@ void Playspace::AddWCharToArray(const wchar_t& C, const int& Position)
 void Playspace::WritePlaySpaceToScreen(Display* Screen)
 {
     int i = 0;
+    
+    for (int X = 0; X < PlaySpaceX+2; X++)
+    {
+        Screen->AddWCharToArray(L'\u2588', (X + OffsetLeft - 1) + (OffsetTop - 1) * ScreenWidth);
+    }
+    for (int X = 0; X < PlaySpaceX + 2; X++)
+    {
+        Screen->AddWCharToArray(L'\u2588', (X + OffsetLeft - 1) + (PlaySpaceY + OffsetTop) * ScreenWidth);
+    }
+    for (int Y = 0; Y < PlaySpaceY; Y++)
+    {
+        Screen->AddWCharToArray(L'\u2588', (OffsetLeft - 1) + (Y + OffsetTop) * ScreenWidth);
+    }
+    for (int Y = 0; Y < PlaySpaceY; Y++)
+    {
+        Screen->AddWCharToArray(L'\u2588', (OffsetLeft + PlaySpaceX) + (Y + OffsetTop) * ScreenWidth);
+    }
+
     for (int playY = 0; playY < PlaySpaceY; playY++)
     {
         for (int playX = 0; playX < PlaySpaceX; playX++)

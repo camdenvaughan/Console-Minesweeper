@@ -11,35 +11,40 @@
 #include <ctime>
 
 
-void Menu()
+void ShowMenu(bool IsPlaying)
 {
     srand((unsigned int)time(NULL));
+    // Create Screen Buffer
 
-    std::cout << "Welcome to MineSweeper\n";
-    std::cout << "======================\n\n";
-
-    std::cout << "\nPress Enter to Generate start\n";
-    // ***** ADD ***** dificulty choice
-    std::cin.get();
-    std::system("cls");
-}
-
-void Play()
-{
     const int ScreenWidth = 120;
     const int ScreenHeight = 30;
 
     const int OffsetTop = 5;
     const int OffsetLeft = 10;
 
-    const int PlaySpaceX = 10;
-    const int PlaySpaceY = 5;
+    int PlaySpaceX = 10;
+    int PlaySpaceY = 5;
 
-    const int BombCount = 10;
+    int BombCount = 5;
 
-    // Create Screen Buffer
     Display Screen(ScreenWidth, ScreenHeight);
     Display* ScreenPtr = &Screen;
+    ScreenPtr->FillScreenWithChar(' ');
+
+    ScreenPtr->AddStringToArray("Welcome to MineSweeper", 0);
+    ScreenPtr->AddStringToArray("======================", ScreenWidth);
+    ScreenPtr->AddStringToArray("Choose A Difficulty", 3 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    1. Easy", 5 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    2. Medium", 6 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    3. Hard", 7 * ScreenWidth);
+
+    ScreenPtr->MoveCursor(0, 29);
+
+    ScreenPtr->PrintArrayToScreen();
+
+    while (Input::MenuInput(PlaySpaceX, PlaySpaceY, BombCount));
+
+
 
     // Create PlaySpace
     Playspace PlayBox(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
@@ -55,11 +60,19 @@ void Play()
 
     // Fill Screen Array with .
     ScreenPtr->FillScreenWithChar(' ');
+    
+    ScreenPtr->AddStringToArray("Good Luck!", 10 + 2 * ScreenWidth);
 
     // Set up Game State
     GameData GameState(PlayBoxPtr, BombCount);
     GameData* GameStatePtr = &GameState;
-    while (GameStatePtr->IsGamePlaying())
+
+    Play(ScreenPtr, PlayBoxPtr, MinesPtr, PlayerPtr, GameStatePtr);
+}
+
+void Play(Display* ScreenPtr, Playspace* PlayBoxPtr, Minefield* MinesPtr, Player* PlayerPtr, GameData* GameStatePtr)
+{
+    while (GameStatePtr->IsGamePlaying(ScreenPtr))
     {
 
         PlayBoxPtr->FillWithMinefield(MinesPtr);
@@ -80,10 +93,13 @@ void Play()
         {
         }
     }
+
+    MinesPtr->ShowAllBombs();
     PlayBoxPtr->FillWithMinefield(MinesPtr);
     PlayBoxPtr->WritePlaySpaceToScreen(ScreenPtr);
     ScreenPtr->PrintArrayToScreen();
+    Sleep(200);
 
-    while (Input::WaitForEnter())
-    { }
+    //bug
+    Input::WaitForEnter();
 }

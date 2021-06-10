@@ -11,8 +11,9 @@ Minefield::Minefield(Playspace* PlayBox, const int& BombCount)
 	: PlayBox(PlayBox), BombCount(BombCount)
 {
 	Blocks.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY);
+	SafeBlockCoords.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY - BombCount);
 
-	GenerateMinefield(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY, BombCount, Blocks);
+	GenerateMinefield();
 }
 
 void Minefield::ShowAllBombs()
@@ -30,22 +31,20 @@ void Minefield::ShowAllBombs()
 
 }
 
-void Minefield::GenerateMinefield(int MapSize, int NumberOfBombs, std::vector<Block>& Blocks)
+void Minefield::GenerateMinefield()
 {
-	for (int i = 0; i < MapSize; i++)
+	for (int i = 0; i < PlayBox->PlaySpaceX * PlayBox->PlaySpaceY; i++)
 	{
-		Blocks.emplace_back(Block(i < NumberOfBombs ? BlockState::Bomb : BlockState::Safe));
+		Blocks.emplace_back(Block(i < BombCount ? BlockState::Bomb : BlockState::Safe));
 	}
 	std::cout << std::endl;
 	std::random_shuffle(Blocks.begin(), Blocks.end());
 }
 
-void Minefield::CheckSurroundingBlocks(int LocationX, int LocationY, GameData* GameState)
+void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& LocationY, GameData* GameState)
 {
 	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].State = BlockState::Clicked;
 	GameState->SafeSquaresClicked++;
-
-	/// ******* NOT WORKING
 
 	// Loop through 8 surrounding Blocks
 	for (int X = LocationX - 1; X < LocationX + 2; X++)
@@ -77,27 +76,23 @@ void Minefield::CheckSurroundingBlocks(int LocationX, int LocationY, GameData* G
 			for (int Y = LocationY - 1; Y < LocationY + 2; Y++)
 			{
 				if (X < 0 || Y < 0 || X > PlayBox->PlaySpaceX - 1 || Y > PlayBox->PlaySpaceY - 1)
-				{
-
-				}
+					continue;
 				else if (Blocks[PlayBox->CoordsToPlaySpace(X, Y)].State == BlockState::Clicked)
-				{
-
-				}
+					continue;
+				else if (Blocks[PlayBox->CoordsToPlaySpace(X, Y)].IsFlagged)
+					continue;
 				else
-				{
 					CheckSurroundingBlocks(X, Y, GameState);
-				}
 			}
 		}
 	// Set the active symbol to show adjacent bombs
 	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].ChangeSymbol(SymbolState::Number);
 }
-
 Block& Minefield::GetBlockAtLocation(const int& Location)
 {
 	return Blocks[Location];
 }
+
 
 Block Minefield::GetBlockAtLocation(const int& Location) const
 {

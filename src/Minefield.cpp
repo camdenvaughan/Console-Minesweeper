@@ -15,21 +15,7 @@ Minefield::Minefield(Playspace* PlayBox, const int& BombCount)
 	GenerateMinefield();
 }
 
-void Minefield::ShowAllBombs()
-{
-	for (int i = 0; i < Blocks.size(); i++)
-	{
-		if (Blocks[i].State == BlockState::Bomb)
-		{
-			if (Blocks[i].IsFlagged)
-				Blocks[i].ChangeSymbol(SymbolState::FlaggedBomb);
-			else
-				Blocks[i].ChangeSymbol(SymbolState::UndetonatedBomb);
-		}
-	}
-
-}
-
+// Creates the minefield
 void Minefield::GenerateMinefield()
 {
 	for (int i = 0; i < PlayBox->PlaySpaceX * PlayBox->PlaySpaceY; i++)
@@ -39,6 +25,7 @@ void Minefield::GenerateMinefield()
 	std::random_shuffle(Blocks.begin(), Blocks.end());
 }
 
+// Counts up all the surrounding bombs
 void Minefield::AddAdjacentBombs(const int& LocationX, const int& LocationY)
 {
 	// Loop through 8 surrounding Blocks
@@ -67,10 +54,11 @@ void Minefield::AddAdjacentBombs(const int& LocationX, const int& LocationY)
 
 void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& LocationY, GameData* GameState)
 {
+	// Set Block to Clicked and Increment the Safe Squares Clicked
 	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].State = BlockState::Clicked;
 	GameState->SafeSquaresClicked++;
 
-
+	// Ensures that the first click has 0 surrounding bombs
 	if (GameState->IsFirstClick)
 	{
 		AddAdjacentBombs(LocationX, LocationY);
@@ -104,13 +92,31 @@ void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& Location
 	// Set the active symbol to show adjacent bombs
 	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].ChangeSymbol(SymbolState::Number);
 }
+
+// Returns a Mine given a coordinate
 Block& Minefield::GetBlockAtLocation(const int& Location)
 {
 	return Blocks[Location];
 }
 
-
+// Const version of GetBlockAtLocation
 Block Minefield::GetBlockAtLocation(const int& Location) const
 {
 	return Blocks[Location];
+}
+
+// Shows all the bombs upon losing
+void Minefield::ShowAllBombs()
+{
+	for (int i = 0; i < Blocks.size(); i++)
+	{
+		if (Blocks[i].State == BlockState::Bomb)
+		{
+			if (Blocks[i].IsFlagged)
+				Blocks[i].ChangeSymbol(SymbolState::FlaggedBomb);
+			else
+				Blocks[i].ChangeSymbol(SymbolState::UndetonatedBomb);
+		}
+	}
+
 }

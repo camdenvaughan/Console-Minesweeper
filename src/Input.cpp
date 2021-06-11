@@ -8,6 +8,7 @@
 #include <Windows.h>
 
 #define F_KEY 0x46
+#define R_KEY 0x52
 #define ONE_KEY 0x31
 #define TWO_KEY 0x32
 #define THREE_KEY 0x33
@@ -15,6 +16,7 @@
 
 bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, GameData* GameState)
 {
+    // Movement
     if (GetAsyncKeyState(VK_RIGHT))
     {
         Player1->Location.X++;
@@ -35,15 +37,20 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
         Player1->Location.Y++;
         return false;
     }
+
+    // Clicking
     if (GetAsyncKeyState(VK_RETURN))
     {
+        // Returns if the Square is flagged or already clicked
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
             return true;
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Clicked)
             return true;
-        // Click
+
+        // If Square is a bomb
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Bomb)
         {
+            // Ensures that the first click is not a bomb
             if (GameState->IsFirstClick)
             {
                 // Swap a bomb with a safe square
@@ -55,23 +62,29 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
                 GameState->IsFirstClick = false;
                 return false;
             }
+
+            // Lose State
             GameState->GameIsOver = true;
-            // Show All Bombs
             Mines->ShowAllBombs();
-            // Set this Bomb to be uppercase X
             Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::ExplodedBomb);
             return false;
         }
+
         // Sets State to clicked, checks the amount of blocks, and clicks any surrounding empty blocks
         Mines->CheckSurroundingBlocks(Player1->Location.X, Player1->Location.Y, GameState);
         GameState->IsFirstClick = false;
 
         return false;
     }
-    if (GetAsyncKeyState(F_KEY)) // F Key
+
+    // Flagging
+    if (GetAsyncKeyState(F_KEY))
     {
+        // If the block is already clicked return
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Clicked)
             return false;
+
+        // Toggles Flag
         if (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged)
         {
             Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).IsFlagged = false;
@@ -85,11 +98,20 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
             return false;
         }
     }
+
+    // Toggles Rules
+    if (GetAsyncKeyState(R_KEY))
+    {
+        GameState->AreRulesToggled = !GameState->AreRulesToggled;
+        return false;
+    }
     return true;
 }
 
+// Gets input and sets the appropriate values
 bool Input::MenuInput(int& PlayX, int& PlayY, int& BombCount)
 {
+    // Easy
     if (GetAsyncKeyState(ONE_KEY) || GetAsyncKeyState(VK_NUMPAD1))
     {
         PlayX = 9;
@@ -97,6 +119,7 @@ bool Input::MenuInput(int& PlayX, int& PlayY, int& BombCount)
         BombCount = 10;
         return false;
     }
+    // Medium
     if (GetAsyncKeyState(TWO_KEY) || GetAsyncKeyState(VK_NUMPAD2))
     {
         PlayX = 16;
@@ -104,6 +127,7 @@ bool Input::MenuInput(int& PlayX, int& PlayY, int& BombCount)
         BombCount = 45;
         return false;
     }
+    // Hard
     if (GetAsyncKeyState(THREE_KEY) || GetAsyncKeyState(VK_NUMPAD3))
     {
         PlayX = 30;
@@ -111,13 +135,10 @@ bool Input::MenuInput(int& PlayX, int& PlayY, int& BombCount)
         BombCount = 99;
         return false;
     }
-    if (GetAsyncKeyState(FOUR_KEY) ||GetAsyncKeyState(VK_NUMPAD4))
-    {
-        return true;
-    }
     return true;
 }
 
+// Pauses Program until enter is pressed
 void Input::WaitForEnter()
 {
     bool EnterWasNotPressed = true;

@@ -2,9 +2,7 @@
 
 int main()
 {
-
 	bool IsPlaying = true;
-	
 	while (IsPlaying)
 	{
 		ShowMenu(IsPlaying);

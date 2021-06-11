@@ -1,6 +1,2 @@
-﻿  Minesweeper.cpp
-  Player.cpp
-  Minefield.cpp
-E:\C++ Projects\Minesweeper\src\Minefield.cpp(20,20): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+﻿  Block.cpp
   Minesweeper.vcxproj -> E:\C++ Projects\Minesweeper\Debug\Minesweeper.exe

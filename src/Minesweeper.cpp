@@ -34,12 +34,18 @@ void ShowMenu(bool IsPlaying)
     ScreenPtr->FillScreenWithChar(' ');
 
     // Menu Message
-    ScreenPtr->AddStringToArray("Welcome to MineSweeper", 0);
-    ScreenPtr->AddStringToArray("======================", ScreenWidth);
-    ScreenPtr->AddStringToArray("Choose A Difficulty", 3 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    1. Easy", 5 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    2. Medium", 6 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    3. Hard", 7 * ScreenWidth);
+    ScreenPtr->AddStringToArray("Welcome to MineSweeper", 2 + ScreenWidth);
+    ScreenPtr->AddStringToArray("======================", 2 + 2 * ScreenWidth);
+    ScreenPtr->AddStringToArray("Choose A Difficulty", 2 + 5 * ScreenWidth);
+    ScreenPtr->AddStringToArray("===================", 2 + 6 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    1. Easy", 2 + 7 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    2. Medium", 2 + 8 * ScreenWidth);
+    ScreenPtr->AddStringToArray("    3. Hard", 2 + 9 * ScreenWidth);
+
+    ScreenPtr->AddStringToArray("======================", 2 + 14 * ScreenWidth);
+    ScreenPtr->AddStringToArray("Made By Camden Vaughan", 2 + 15 * ScreenWidth);
+    ScreenPtr->AddStringToArray("www.CamdenVaughan.com", 2 + 16 * ScreenWidth);
+    ScreenPtr->AddStringToArray("======================", 2 + 17 * ScreenWidth);
 
     // Move Cursor to Bottom Left
     ScreenPtr->MoveCursor(0, 29);
@@ -92,6 +98,8 @@ void Play(Display* ScreenPtr, Playspace* PlayBoxPtr, Minefield* MinesPtr, Player
         // Add PlayBox to Screen Array
         PlayBoxPtr->WritePlaySpaceToScreen(ScreenPtr);
 
+        // Handles showing the rules
+        ShowRules(ScreenPtr, GameStatePtr);
 
         // Print Sceen Array to screen
         ScreenPtr->PrintArrayToScreen();
@@ -110,4 +118,27 @@ void Play(Display* ScreenPtr, Playspace* PlayBoxPtr, Minefield* MinesPtr, Player
 
     // Pause before restarting
     Input::WaitForEnter();
+}
+
+void ShowRules(Display* ScreenPtr, GameData* GameState)
+{
+    ScreenPtr->AddStringToArray("Press 'R' To Toggle Rules", 75 + 4 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("=========================", 75 + 5 * ScreenPtr->ScreenWidth);
+    if (GameState->AreRulesToggled)
+    {
+        ScreenPtr->AddStringToArray("Controls", 75 + 7 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("========", 75 + 8 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Use Arrow Keys To Navigate", 75 + 9 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Press 'F' to Flag a Square", 75 + 10 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Press 'Enter' to Click a Square", 75 + 11 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("Objective", 75 + 13 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("=========", 75 + 14 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Click any square to start", 75 + 15 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- A number indicates how many Mines", 75 + 16 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("  are in the surrounding 8 squares.", 75 + 17 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Flag squares to help you keep track", 75 + 18 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("  of spaces that might be bombs!", 75 + 19 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Click all the safe squares to WIN!", 75 + 20 * ScreenPtr->ScreenWidth);
+        ScreenPtr->AddStringToArray("- Click a bomb to lose...", 75 + 21 * ScreenPtr->ScreenWidth);
+    }
 }

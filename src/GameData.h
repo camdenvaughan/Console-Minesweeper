@@ -9,6 +9,8 @@ public:
 
 	bool GameIsOver = false;
 
+	bool AreRulesToggled = false;
+
 	int SafeSquaresClicked = 0;
 
 	GameData(class Playspace* PlayBox, const int& BombCount);

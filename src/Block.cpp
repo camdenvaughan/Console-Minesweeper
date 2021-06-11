@@ -3,12 +3,10 @@
 Block::Block(BlockState state) 
 	: State(state) 
 {
-	if (State == BlockState::Bomb)
-		ChangeSymbol(SymbolState::ExplodedBomb);
-	else
-		ChangeSymbol(SymbolState::Default);
+	ChangeSymbol(SymbolState::Default);
 }
 
+// Handle Symbol Changes
 void Block::ChangeSymbol(SymbolState interactionState)
 {
 	switch (interactionState)
@@ -41,16 +39,19 @@ void Block::ChangeSymbol(SymbolState interactionState)
 	}
 }
 
+// Increment Addjacent bombs
 void Block::AddAdjacentBomb()
 {
 	AdjacentBombs++;
 }
 
+// Return Symbol
 wchar_t Block::GetActiveSymbol() const
 {
 	return ActiveSymbol;
 }
 
+// Return Adjacent Bombs
 int Block::GetAdjacentBombs() const
 {
 	return AdjacentBombs;

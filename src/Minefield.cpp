@@ -2,7 +2,6 @@
 #include "Block.h"
 #include "Playspace.h"
 #include "GameData.h"
-#include <iostream>
 #include <algorithm>
 #include <ctime>
 
@@ -18,14 +17,14 @@ Minefield::Minefield(Playspace* PlayBox, const int& BombCount)
 
 void Minefield::ShowAllBombs()
 {
-	for (Block Square : Blocks)
+	for (int i = 0; i < Blocks.size(); i++)
 	{
-		if (Square.State == BlockState::Bomb)
+		if (Blocks[i].State == BlockState::Bomb)
 		{
-			if (Square.IsFlagged)
-				Square.ChangeSymbol(SymbolState::FlaggedBomb);
+			if (Blocks[i].IsFlagged)
+				Blocks[i].ChangeSymbol(SymbolState::FlaggedBomb);
 			else
-				Square.ChangeSymbol(SymbolState::UndetonatedBomb);
+				Blocks[i].ChangeSymbol(SymbolState::UndetonatedBomb);
 		}
 	}
 
@@ -37,15 +36,11 @@ void Minefield::GenerateMinefield()
 	{
 		Blocks.emplace_back(Block(i < BombCount ? BlockState::Bomb : BlockState::Safe));
 	}
-	std::cout << std::endl;
 	std::random_shuffle(Blocks.begin(), Blocks.end());
 }
 
-void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& LocationY, GameData* GameState)
+void Minefield::AddAdjacentBombs(const int& LocationX, const int& LocationY)
 {
-	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].State = BlockState::Clicked;
-	GameState->SafeSquaresClicked++;
-
 	// Loop through 8 surrounding Blocks
 	for (int X = LocationX - 1; X < LocationX + 2; X++)
 	{
@@ -68,6 +63,27 @@ void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& Location
 			}
 		}
 	}
+}
+
+void Minefield::CheckSurroundingBlocks(const int& LocationX, const int& LocationY, GameData* GameState)
+{
+	Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].State = BlockState::Clicked;
+	GameState->SafeSquaresClicked++;
+
+
+	if (GameState->IsFirstClick)
+	{
+		AddAdjacentBombs(LocationX, LocationY);
+		while (Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].GetAdjacentBombs() != 0)
+		{
+			GenerateMinefield();
+			AddAdjacentBombs(LocationX, LocationY);
+		}
+		GameState->IsFirstClick = false;
+	}
+	else
+		AddAdjacentBombs(LocationX, LocationY);
+
 
 	// If the block contained no adjacent bombs, click and check the 8 surrounding blocks
 	if (Blocks[PlayBox->CoordsToPlaySpace(LocationX, LocationY)].GetAdjacentBombs() == 0)

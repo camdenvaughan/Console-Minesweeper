@@ -47,12 +47,12 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
             if (GameState->IsFirstClick)
             {
                 // Swap a bomb with a safe square
-                GameState->IsFirstClick = false;
                 while (Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).State == BlockState::Bomb)
                 {
                     Mines->GenerateMinefield();
                 }
                 Mines->CheckSurroundingBlocks(Player1->Location.X, Player1->Location.Y, GameState);
+                GameState->IsFirstClick = false;
                 return false;
             }
             GameState->GameIsOver = true;
@@ -62,9 +62,9 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
             Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::ExplodedBomb);
             return false;
         }
-        GameState->IsFirstClick = false;
         // Sets State to clicked, checks the amount of blocks, and clicks any surrounding empty blocks
         Mines->CheckSurroundingBlocks(Player1->Location.X, Player1->Location.Y, GameState);
+        GameState->IsFirstClick = false;
 
         return false;
     }

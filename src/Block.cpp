@@ -1,11 +1,10 @@
 #include "Block.h"
-#include <iostream>
 
 Block::Block(BlockState state) 
 	: State(state) 
 {
 	if (State == BlockState::Bomb)
-		ChangeSymbol(SymbolState::Default);
+		ChangeSymbol(SymbolState::ExplodedBomb);
 	else
 		ChangeSymbol(SymbolState::Default);
 }

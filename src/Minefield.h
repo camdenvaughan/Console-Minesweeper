@@ -14,12 +14,15 @@ private:
 
 private:
 
+	void AddAdjacentBombs(const int& LocationX, const int& LocationY);
+
 public:
 	Minefield(Playspace* PlayBox, const int& BombCount);
 
 	void GenerateMinefield();
 
 	void ShowAllBombs();
+
 
 	void CheckSurroundingBlocks(const int& LocationX, const int& LocationY, struct GameData* GameState);
 

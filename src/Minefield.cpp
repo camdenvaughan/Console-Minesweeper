@@ -9,15 +9,14 @@
 Minefield::Minefield(Playspace* PlayBox, const int& BombCount) 
 	: PlayBox(PlayBox), BombCount(BombCount)
 {
-	Blocks.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY);
-	SafeBlockCoords.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY - BombCount);
-
 	GenerateMinefield();
 }
 
 // Creates the minefield
 void Minefield::GenerateMinefield()
 {
+	Blocks.clear();
+	Blocks.reserve(PlayBox->PlaySpaceX * PlayBox->PlaySpaceY);
 	for (int i = 0; i < PlayBox->PlaySpaceX * PlayBox->PlaySpaceY; i++)
 	{
 		Blocks.emplace_back(Block(i < BombCount ? BlockState::Bomb : BlockState::Safe));
@@ -105,18 +104,33 @@ Block Minefield::GetBlockAtLocation(const int& Location) const
 	return Blocks[Location];
 }
 
-// Shows all the bombs upon losing
+// Shows all the bombs upon losing or for debug
 void Minefield::ShowAllBombs()
 {
-	for (int i = 0; i < Blocks.size(); i++)
+
+	if (BombsAreShown)
 	{
-		if (Blocks[i].State == BlockState::Bomb)
+		for (int i = 0; i < Blocks.size(); i++)
 		{
-			if (Blocks[i].IsFlagged)
-				Blocks[i].ChangeSymbol(SymbolState::FlaggedBomb);
-			else
+			if (Blocks[i].State == BlockState::Bomb)
+			{
 				Blocks[i].ChangeSymbol(SymbolState::UndetonatedBomb);
+			}
 		}
 	}
+	else
+	{
+		for (int i = 0; i < Blocks.size(); i++)
+		{
+			if (Blocks[i].State == BlockState::Bomb)
+			{
+				if (Blocks[i].IsFlagged)
+					Blocks[i].ChangeSymbol(SymbolState::Flag);
+				else
+					Blocks[i].ChangeSymbol(SymbolState::Default);
+			}
+		}
+	}
+
 
 }

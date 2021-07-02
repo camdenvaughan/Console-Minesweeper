@@ -37,6 +37,12 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
         Player1->Location.Y++;
         return false;
     }
+    if (GetAsyncKeyState(FOUR_KEY))
+    {
+        Mines->BombsAreShown = !Mines->BombsAreShown;
+        Mines->ShowAllBombs();
+        return false;
+    }
 
     // Clicking
     if (GetAsyncKeyState(VK_RETURN))
@@ -65,6 +71,7 @@ bool Input::RecieveInput(Minefield* Mines, Player* Player1, Playspace* PlayBox, 
 
             // Lose State
             GameState->GameIsOver = true;
+            Mines->BombsAreShown = true;
             Mines->ShowAllBombs();
             Mines->GetBlockAtLocation(PlayBox->CoordsToPlaySpace(Player1->Location.X, Player1->Location.Y)).ChangeSymbol(SymbolState::ExplodedBomb);
             return false;

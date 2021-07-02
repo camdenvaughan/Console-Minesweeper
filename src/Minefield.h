@@ -7,14 +7,18 @@ class Block;
 class Minefield
 {
 private:
+
 	Playspace* PlayBox;
 	const int BombCount;
 	std::vector<Block> Blocks;
-	std::vector<int> SafeBlockCoords;
 
 private:
 
 	void AddAdjacentBombs(const int& LocationX, const int& LocationY);
+
+public:
+
+	bool BombsAreShown = false; // Debug
 
 public:
 	Minefield(Playspace* PlayBox, const int& BombCount);
@@ -22,7 +26,6 @@ public:
 	void GenerateMinefield();
 
 	void ShowAllBombs();
-
 
 	void CheckSurroundingBlocks(const int& LocationX, const int& LocationY, struct GameData* GameState);
 

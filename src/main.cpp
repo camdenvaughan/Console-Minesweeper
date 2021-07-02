@@ -5,9 +5,7 @@ int main()
 	bool IsPlaying = true;
 	while (IsPlaying)
 	{
-		ShowMenu(IsPlaying);
+		InitGame(IsPlaying);
 	}
-	
-	return 1;
 }
 

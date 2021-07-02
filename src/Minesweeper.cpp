@@ -10,7 +10,7 @@
 #include <ctime>
 
 
-void ShowMenu(bool IsPlaying)
+void InitGame(bool IsPlaying)
 {
     srand((unsigned int)time(NULL));
 
@@ -28,30 +28,12 @@ void ShowMenu(bool IsPlaying)
 
     // Create Screen Buffer
     Display Screen(ScreenWidth, ScreenHeight);
-    Display* ScreenPtr = &Screen;
 
     // Clear Screen
-    ScreenPtr->FillScreenWithChar(' ');
+    Screen.FillScreenWithChar(' ');
 
     // Menu Message
-    ScreenPtr->AddStringToArray("Welcome to MineSweeper", 2 + ScreenWidth);
-    ScreenPtr->AddStringToArray("======================", 2 + 2 * ScreenWidth);
-    ScreenPtr->AddStringToArray("Choose A Difficulty", 2 + 5 * ScreenWidth);
-    ScreenPtr->AddStringToArray("===================", 2 + 6 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    1. Easy", 2 + 7 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    2. Medium", 2 + 8 * ScreenWidth);
-    ScreenPtr->AddStringToArray("    3. Hard", 2 + 9 * ScreenWidth);
-
-    ScreenPtr->AddStringToArray("======================", 2 + 14 * ScreenWidth);
-    ScreenPtr->AddStringToArray("Made By Camden Vaughan", 2 + 15 * ScreenWidth);
-    ScreenPtr->AddStringToArray("www.CamdenVaughan.com", 2 + 16 * ScreenWidth);
-    ScreenPtr->AddStringToArray("======================", 2 + 17 * ScreenWidth);
-
-    // Move Cursor to Bottom Left
-    ScreenPtr->MoveCursor(0, 29);
-
-    // Print Screen
-    ScreenPtr->PrintArrayToScreen();
+    ShowMenu(&Screen);
 
     // Get Menu Input
     while (Input::MenuInput(PlaySpaceX, PlaySpaceY, BombCount));
@@ -60,28 +42,24 @@ void ShowMenu(bool IsPlaying)
 
     // Create PlaySpace
     Playspace PlayBox(PlaySpaceX, PlaySpaceY, OffsetLeft, OffsetTop, ScreenWidth);
-    Playspace* PlayBoxPtr = &PlayBox;
 
     // Create Minefield
-    Minefield Mines(PlayBoxPtr, BombCount);
-    Minefield* MinesPtr = &Mines;
+    Minefield Mines(&PlayBox, BombCount);
 
     // Create Player
     Player Player1(PlaySpaceX, PlaySpaceY);
-    Player* PlayerPtr = &Player1;
 
     // Fill Screen Array with .
-    ScreenPtr->FillScreenWithChar(' ');
+    Screen.FillScreenWithChar(' ');
     
-    ScreenPtr->AddStringToArray("Good Luck!", 10 + 2 * ScreenWidth);
-    ScreenPtr->AddStringToArray("==========", 10 + 3 * ScreenWidth);
+    Screen.AddStringToArray("Good Luck!", 10 + 2 * ScreenWidth);
+    Screen.AddStringToArray("==========", 10 + 3 * ScreenWidth);
 
     // Set up Game State
-    GameData GameState(PlayBoxPtr, BombCount);
-    GameData* GameStatePtr = &GameState;
+    GameData GameState(&PlayBox, BombCount);
 
     // Start Game Loop
-    Play(ScreenPtr, PlayBoxPtr, MinesPtr, PlayerPtr, GameStatePtr);
+    Play(&Screen, &PlayBox, &Mines, &Player1, &GameState);
 }
 
 void Play(Display* ScreenPtr, Playspace* PlayBoxPtr, Minefield* MinesPtr, Player* PlayerPtr, GameData* GameStatePtr)
@@ -118,6 +96,28 @@ void Play(Display* ScreenPtr, Playspace* PlayBoxPtr, Minefield* MinesPtr, Player
 
     // Pause before restarting
     Input::WaitForEnter();
+}
+
+void ShowMenu(Display* ScreenPtr)
+{
+    ScreenPtr->AddStringToArray("Welcome to MineSweeper", 2 + ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("======================", 2 + 2 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("Choose A Difficulty", 2 + 5 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("===================", 2 + 6 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("    1. Easy", 2 + 7 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("    2. Medium", 2 + 8 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("    3. Hard", 2 + 9 * ScreenPtr->ScreenWidth);
+
+    ScreenPtr->AddStringToArray("======================", 2 + 14 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("Made By Camden Vaughan", 2 + 15 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("www.CamdenVaughan.com", 2 + 16 * ScreenPtr->ScreenWidth);
+    ScreenPtr->AddStringToArray("======================", 2 + 17 * ScreenPtr->ScreenWidth);
+
+    // Move Cursor to Bottom Left
+    ScreenPtr->MoveCursor(0, 29);
+
+    // Print Screen
+    ScreenPtr->PrintArrayToScreen();
 }
 
 void ShowRules(Display* ScreenPtr, GameData* GameState)
